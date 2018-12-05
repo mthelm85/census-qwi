@@ -30,7 +30,9 @@ export default {
   data () {
     return {
       chartData: [],
-      noData: null
+      countyFips: countyFips.countyFips,
+      noData: null,
+      stateCode: null
     }
   },
 
