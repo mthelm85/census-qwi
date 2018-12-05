@@ -4,5 +4,5 @@ const express = require('express'),
       port = process.enc.PORT || 3000
       app = express()
 
-app.use(serveStatic(path.join(__dirname, 'dist')))
+app.use(serveStatic(path.join(__dirname, '/dist')))
 app.listen(port)
