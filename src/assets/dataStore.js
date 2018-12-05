@@ -54,7 +54,41 @@ const stateFIPS = {
   'Wyoming': '56'
 }
 
+const industryCodes = {
+  'All Industries': '00',
+  'Agriculture, Forestry, Fishing and Hunting': '11',
+  'Mining, Quarrying, and Oil and Gas Extraction': '21',
+  'Utilities': '22',
+  'Construction': '23',
+  'Manufacturing': '31,32,33',
+  'Wholesale Trade': '42',
+  'Retail Trade': '44,45',
+  'Transportation and Warehousing': '48,49',
+  'Information': '51',
+  'Finance and Insurance': '52',
+  'Real Estate and Rental and Leasing': '53',
+  'Professional, Scientific, and Technical Services': '54',
+  'Management of Companies and Enterprises': '55',
+  'Administrative and Support and Waste Management and Remediation Services': '56',
+  'Educational Services': '61',
+  'Health Care and Social Assistance': '62',
+  'Arts, Entertainment, and Recreation': '71',
+  'Accommodation and Food Services': '72',
+  'Other Services': '81'
+}
+
+const firmSizeCodes = {
+  'All Firm Sizes': '0',
+  '0 - 19': '1',
+  '20 - 49': '2',
+  '50 - 249': '3',
+  '250 - 499': '4',
+  '500+': '5'
+}
+
 module.exports = {
+  firmSizeCodes,
+  industryCodes,
   states,
   stateFIPS
 }
