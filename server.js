@@ -13,8 +13,6 @@ app.use(cors({
   methods: ['GET'],
   credentials: true
 }))
-app.use(bodyParser.urlencoded({ extended: true }))
-app.use(bodyParser.json())
 
 mongoClient.connect(url, { useNewUrlParser: true }, (err, client) => {
   if (err) throw err
