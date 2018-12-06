@@ -25,12 +25,14 @@
 
 <script>
 import axios from 'axios'
+import Dexie from 'dexie'
 import { eventBus } from '@/main'
 
 export default {
   data () {
     return {
       chartData: [],
+      db: new Dexie('counties'),
       noData: null,
       stateCode: null
     }
@@ -38,7 +40,15 @@ export default {
 
   async created () {
     const res = await axios.get('https://census-qwi.herokuapp.com/county-fips')
-    console.log(res)
+    this.db.version(1).stores({
+      counties: 'id, name'
+    })
+    let countyData = []
+    for (let i = 0; i < res.data.counties.length; i++) {
+      countyData.push({ id: res.data.counties[i].Code, name: res.data.counties[i].Name })
+    }
+    const dexie = await this.db.counties(Dexie.bulkPut(countyData))
+    console.log(dexie)
     eventBus.$on('chartData', (data) => {
       this.chartData.length = 0
       this.noData = false
