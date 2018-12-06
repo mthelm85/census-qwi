@@ -54,14 +54,14 @@
 <script>
 import axios from 'axios'
 import { eventBus } from '@/main'
-import dataStore from '@/assets/dataStore'
+import { firmSizeCodes, industryCodes, states, stateFIPS } from '@/assets/dataStore.js'
 
 export default {
   data () {
     return {
       loading: false,
       items: [
-        { label: 'State', icon: 'location_on', list: dataStore.states, value: null },
+        { label: 'State', icon: 'location_on', list: states, value: null },
         { label: 'Year', icon: 'calendar_today', list: ['2018', '2017'], value: null },
         { label: 'Quarter', icon: 'event', list: ['1', '2', '3', '4'], value: null },
         { label: 'Firm Size (# Employees)', icon: 'supervisor_account', list: ['All Firm Sizes', '0 - 19', '20 - 49', '50 - 249', '250 - 499', '500+'], value: null },
@@ -97,13 +97,13 @@ export default {
 
   computed: {
     firmSize () {
-      return dataStore.firmSizeCodes[this.items[3].value]
+      return firmSizeCodes[this.items[3].value]
     },
     industry () {
-      return dataStore.industryCodes[this.items[4].value]
+      return industryCodes[this.items[4].value]
     },
     stateFips () {
-      return dataStore.stateFIPS[this.items[0].value]
+      return stateFIPS[this.items[0].value]
     }
   },
 
@@ -126,7 +126,6 @@ export default {
           key: 'f0c0e4dc0941d95473e9ce88d697d682b1d7fca4'
         }
       })
-      console.log(res.data.length)
       if (res.data.length === 0) {
         eventBus.$emit('noContent')
       } else {

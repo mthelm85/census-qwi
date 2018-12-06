@@ -1,6 +1,6 @@
-const states = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'District of Columbia', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming']
+export const states = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'District of Columbia', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming']
 
-const stateFIPS = {
+export const stateFIPS = {
   'Alabama': '01',
   'Alaska': '02',
   'Arizona': '04',
@@ -54,7 +54,7 @@ const stateFIPS = {
   'Wyoming': '56'
 }
 
-const industryCodes = {
+export const industryCodes = {
   'All Industries': '00',
   'Agriculture, Forestry, Fishing and Hunting': '11',
   'Mining, Quarrying, and Oil and Gas Extraction': '21',
@@ -77,18 +77,11 @@ const industryCodes = {
   'Other Services': '81'
 }
 
-const firmSizeCodes = {
+export const firmSizeCodes = {
   'All Firm Sizes': '0',
   '0 - 19': '1',
   '20 - 49': '2',
   '50 - 249': '3',
   '250 - 499': '4',
   '500+': '5'
-}
-
-module.exports = {
-  firmSizeCodes,
-  industryCodes,
-  states,
-  stateFIPS
 }
