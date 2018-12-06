@@ -47,7 +47,7 @@ export default {
     for (let i = 0; i < res.data.counties.length; i++) {
       countyData.push({ id: res.data.counties[i].Code, name: res.data.counties[i].Name })
     }
-    const dexie = await this.db.counties(Dexie.bulkPut(countyData))
+    const dexie = await this.db.counties.bulkPut(countyData)
     console.log(dexie)
     eventBus.$on('chartData', (data) => {
       this.chartData.length = 0
