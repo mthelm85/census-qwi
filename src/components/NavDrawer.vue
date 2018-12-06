@@ -62,7 +62,7 @@ export default {
       loading: false,
       items: [
         { label: 'State', icon: 'location_on', list: states, value: null },
-        { label: 'Year', icon: 'calendar_today', list: ['2018', '2017'], value: null },
+        { label: 'Year', icon: 'calendar_today', list: ['2017', '2016'], value: null },
         { label: 'Quarter', icon: 'event', list: ['1', '2', '3', '4'], value: null },
         { label: 'Firm Size (# Employees)', icon: 'supervisor_account', list: ['All Firm Sizes', '0 - 19', '20 - 49', '50 - 249', '250 - 499', '500+'], value: null },
         {
