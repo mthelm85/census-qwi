@@ -24,6 +24,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 import { eventBus } from '@/main'
 
 export default {
@@ -35,7 +36,9 @@ export default {
     }
   },
 
-  created () {
+  async created () {
+    const res = await axios.get('https://census-qwi.herokuapp.com/county-fips')
+    console.log(res)
     eventBus.$on('chartData', (data) => {
       this.chartData.length = 0
       this.noData = false
