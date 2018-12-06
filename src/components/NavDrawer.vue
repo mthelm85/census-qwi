@@ -110,6 +110,7 @@ export default {
   methods: {
     async fetchData () {
       this.loading = true
+      eventBus.$emit('stateCode', this.stateFips)
       const res = await axios.get('https://api.census.gov/data/timeseries/qwi/sa', {
         params: {
           get: 'Emp',

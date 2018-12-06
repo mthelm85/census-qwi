@@ -39,21 +39,32 @@ export default {
   },
 
   async created () {
-    const res = await axios.get('https://census-qwi.herokuapp.com/county-fips')
-    this.db.version(1).stores({
-      counties: 'id, name'
-    })
-    let countyData = []
-    for (let i = 0; i < res.data.counties.length; i++) {
-      countyData.push({ id: res.data.counties[i].Code, name: res.data.counties[i].Name })
+    try {
+      const res = await axios.get('https://census-qwi.herokuapp.com/county-fips')
+      this.db.version(1).stores({
+        counties: 'id, name'
+      })
+      let countyData = []
+      for (let i = 0; i < res.data.counties.length; i++) {
+        countyData.push({ id: res.data.counties[i].Code, name: res.data.counties[i].Name })
+      }
+      await this.db.counties.bulkPut(countyData)
+    } catch (err) {
+      alert(err)
     }
-    const dexie = await this.db.counties.bulkPut(countyData)
-    console.log(dexie)
+    eventBus.$on('stateCode', (code) => {
+      this.stateCode = code
+    })
     eventBus.$on('chartData', (data) => {
       this.chartData.length = 0
       this.noData = false
       for (let i = 1; i < data.length; i++) {
-        if (data[i][0] > 0) this.chartData.push([data[i][10], data[i][0]])
+        if (data[i][0] > 0) {
+          // Look up state code + county code in
+          // indexedDB(dexie), push county name, value to chartData. Remove leading 0 from
+          // stateCodes
+          this.chartData.push([data[i][10], data[i][0]])
+        }
       }
     })
     eventBus.$on('noContent', () => {
