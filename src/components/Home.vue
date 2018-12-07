@@ -10,16 +10,16 @@
         </v-alert>
         <bar-chart
           id="barChart"
-          height="600px"
           :data="chartData"
           :messages="{empty: 'No data'}"
           xtitle="Total Employment"
-          ytitle="County Name"
           thousands=","
-          download="youth_employment_by_county">
+          download="youth_employment_by_county"
+          :height="chartHeight">
         </bar-chart>
       </v-flex>
     </v-layout>
+    <IntroModal></IntroModal>
   </v-container>
 </template>
 
@@ -27,6 +27,7 @@
 import axios from 'axios'
 import Dexie from 'dexie'
 import { eventBus } from '@/main'
+import IntroModal from '@/components/IntroModal'
 
 export default {
   data () {
@@ -38,6 +39,22 @@ export default {
     }
   },
 
+  components: {
+    IntroModal
+  },
+
+  computed: {
+    chartHeight () {
+      switch (this.$vuetify.breakpoint.name) {
+        case 'xs': return '220px'
+        case 'sm': return '400px'
+        case 'md': return '500px'
+        case 'lg': return '600px'
+        case 'xl': return '800px'
+      }
+    }
+  },
+
   async created () {
     try {
       const res = await axios.get('https://census-qwi.herokuapp.com/county-fips')
@@ -46,7 +63,11 @@ export default {
       })
       let countyData = []
       for (let i = 0; i < res.data.counties.length; i++) {
-        countyData.push({ id: res.data.counties[i].Code, name: res.data.counties[i].Name })
+        if ((Math.log(res.data.counties[i].Code) * Math.LOG10E + 1 | 0) === 4) {
+          countyData.push({ id: `0${res.data.counties[i].Code}`, name: res.data.counties[i].Name })
+        } else {
+          countyData.push({ id: `${res.data.counties[i].Code}`, name: res.data.counties[i].Name })
+        }
       }
       await this.db.counties.bulkPut(countyData)
     } catch (err) {
@@ -55,15 +76,15 @@ export default {
     eventBus.$on('stateCode', (code) => {
       this.stateCode = code
     })
-    eventBus.$on('chartData', (data) => {
+    eventBus.$on('chartData', async (data) => {
       this.chartData.length = 0
       this.noData = false
       for (let i = 1; i < data.length; i++) {
         if (data[i][0] > 0) {
           // Look up state code + county code in
-          // indexedDB(dexie), push county name, value to chartData. Remove leading 0 from
-          // stateCodes
-          this.chartData.push([data[i][10], data[i][0]])
+          // indexedDB(dexie), push county name, value to chartData.
+          let countyName = await this.db.counties.where('id').equals(`${this.stateCode}${data[i][10]}`).toArray()
+          this.chartData.push([countyName[0].name, data[i][0]])
         }
       }
     })
@@ -74,5 +95,6 @@ export default {
 }
 </script>
 
-<style lang="css">
+<style scoped lang="css">
+
 </style>
