@@ -81,8 +81,6 @@ export default {
       this.noData = false
       for (let i = 1; i < data.length; i++) {
         if (data[i][0] > 0) {
-          // Look up state code + county code in
-          // indexedDB(dexie), push county name, value to chartData.
           let countyName = await this.db.counties.where('id').equals(`${this.stateCode}${data[i][10]}`).toArray()
           this.chartData.push([countyName[0].name, data[i][0]])
         }

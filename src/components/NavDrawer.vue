@@ -63,6 +63,7 @@ export default {
       items: [
         { label: 'State', icon: 'location_on', list: states, value: null },
         { label: 'Year', icon: 'calendar_today', list: [new Date().getFullYear() - 1, new Date().getFullYear() - 2, new Date().getFullYear() - 3], value: null },
+        { label: 'Quarter', icon: 'date_range', list: ['1', '2', '3', '4'], value: null },
         { label: 'Firm Size (# Employees)', icon: 'supervisor_account', list: ['All Firm Sizes', '0 - 19', '20 - 49', '50 - 249', '250 - 499', '500+'], value: null },
         {
           label: 'Industry',
@@ -88,7 +89,8 @@ export default {
             'Arts, Entertainment, and Recreation',
             'Accommodation and Food Services',
             'Other Services'
-          ]
+          ],
+          value: null
         }
       ]
     }
@@ -96,10 +98,10 @@ export default {
 
   computed: {
     firmSize () {
-      return firmSizeCodes[this.items[2].value]
+      return firmSizeCodes[this.items[3].value]
     },
     industry () {
-      return industryCodes[this.items[3].value]
+      return industryCodes[this.items[4].value]
     },
     stateFips () {
       return stateFIPS[this.items[0].value]
@@ -121,7 +123,7 @@ export default {
             for: 'county:*',
             in: `state:${this.stateFips}`,
             year: this.items[1].value,
-            quarter: '1,2,3,4',
+            quarter: this.items[2].value,
             sex: '0',
             agegrp: 'A01',
             ownercode: 'A05',
