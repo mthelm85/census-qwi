@@ -83,7 +83,7 @@ export default {
 
   async created () {
     try {
-      const res = await axios.get('https://cors-anywhere.herokuapp.com/https://census-qwi.herokuapp.com/county-fips')
+      const res = await axios.get('https://census-qwi.herokuapp.com/county-fips')
       this.db.version(1).stores({
         counties: 'id, name'
       })
