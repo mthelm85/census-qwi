@@ -25,6 +25,12 @@ export default {
   data () {
     return {
       employmentTotals: [],
+      mapData: {
+        map: null,
+        baseLayer: null,
+        labelLayer: null,
+        jsonLayer: null
+      },
       stateCode: null
     }
   },
@@ -44,26 +50,28 @@ export default {
   },
 
   async mounted () {
-    const map = L.map('map', { zoomControl: true })
+    eventBus.$on('stateCode', (code) => {
+      this.stateCode = code
+    })
+
+    this.mapData.map = L.map('map', { zoomControl: true })
       .locate({ setView: true, maxZoom: 6 })
-    map.createPane('labels')
-    map.getPane('labels').style.zIndex = 6
-    L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}{r}.png', {
+    this.mapData.map.createPane('labels')
+    this.mapData.map.getPane('labels').style.zIndex = 6
+    this.baseLayer = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}{r}.png', {
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
       subdomains: 'abcd',
       maxZoom: 16,
       minZoom: 4
-    }).addTo(map)
-    L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_only_labels/{z}/{x}/{y}{r}.png', {
+    }).addTo(this.mapData.map)
+    this.labelLayer = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_only_labels/{z}/{x}/{y}{r}.png', {
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
       subdomains: 'abcd',
       maxZoom: 16,
       minZoom: 4,
       pane: 'labels'
-    }).addTo(map)
-    eventBus.$on('stateCode', (code) => {
-      this.stateCode = code
-    })
+    }).addTo(this.mapData.map)
+
     // Listen for data from NavDrawer, then generate choropleth
     eventBus.$on('chartData', (data) => {
       // Store just the employment totals into a new array so that we can compute max in getColor (above)
@@ -73,7 +81,7 @@ export default {
           counties.features[i].properties.totalEmployment = this.getTotalEmployment(data, counties.features[i].properties.COUNTY)[0]
         }
       }
-      L.geoJSON(counties, {
+      this.mapData.jsonLayer = L.geoJSON(counties, {
         style: (feature) => {
           if (feature.properties.totalEmployment && feature.properties.totalEmployment !== null) {
             return {
@@ -100,7 +108,7 @@ export default {
               `)
           }
         }
-      }).addTo(map)
+      }).addTo(this.mapData.map)
     })
   }
 }
