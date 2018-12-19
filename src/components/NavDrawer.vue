@@ -1,5 +1,5 @@
 <template lang="html">
-  <v-navigation-drawer permanent app class="text-xs-center">
+  <v-navigation-drawer app permanent class="text-xs-center">
     <v-toolbar flat>
       <v-list>
         <v-list-tile>
@@ -12,19 +12,6 @@
 
     <v-divider></v-divider>
     <v-list dense>
-      <v-list-tile avatar>
-        <v-list-tile-action>
-          <v-icon>perm_data_setting</v-icon>
-        </v-list-tile-action>
-        <v-radio-group @change="changeVisType" :column="false" v-model="visTypeValue">
-        <v-radio
-          v-for="type in visType"
-          :key="type.label"
-          :label="type.label"
-          :value="type.label"
-        ></v-radio>
-      </v-radio-group>
-      </v-list-tile>
       <v-list-tile
         class="py-2"
         v-for="item in items"
@@ -41,7 +28,7 @@
 
       </v-list-tile>
     </v-list>
-    <v-btn color="primary" @click="fetchData">Create Chart</v-btn>
+    <v-btn color="primary" @click="fetchData" :disabled="disableBtn">GET DATA</v-btn>
     <v-dialog
       v-model="loading"
       persistent
@@ -103,13 +90,14 @@ export default {
           ],
           value: null
         }
-      ],
-      visType: [{ label: 'Map' }, { label: 'Bar Chart' }],
-      visTypeValue: 'Map'
+      ]
     }
   },
 
   computed: {
+    disableBtn () {
+      return this.items.filter(item => item.value === null).length > 0
+    },
     firmSize () {
       return firmSizeCodes[this.items[3].value]
     },
@@ -129,9 +117,6 @@ export default {
   },
 
   methods: {
-    changeVisType () {
-      eventBus.$emit('changeVisType', this.visTypeValue)
-    },
     async fetchData () {
       this.loading = true
       eventBus.$emit('stateCode', this.stateFips)

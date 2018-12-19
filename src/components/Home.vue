@@ -2,29 +2,44 @@
   <v-container grid-list-xs class="text-xs-center">
     <v-layout row wrap>
       <v-flex xs12>
-        <IntroModal></IntroModal>
-        <v-alert
-          :value="noData"
-          type="warning"
-          transition="scale-transition">
-          No data returned. Try different settings...
-        </v-alert>
-        <transition name="fade" mode="out-in">
-          <keep-alive>
-            <Map v-if="visType === 'Map'"></Map>
-            <bar-chart
-              v-else
-              id="barChart"
-              :data="chartData"
-              :messages="{empty: 'No data'}"
-              xtitle="Total Employment"
-              thousands=","
-              download="youth_employment_by_county"
-              :height="chartHeight">
-            </bar-chart>
-          </keep-alive>
-        </transition>
+        <v-card>
+          <v-flex>
+            <v-radio-group class="ml-3" :column="false" v-model="visType">
+            <v-radio
+              color="primary"
+              v-for="radio in radios"
+              :key="radio.label"
+              :label="radio.label"
+              :value="radio.label"
+            ></v-radio>
+          </v-radio-group>
+          </v-flex>
+          <v-flex xs12>
+            <transition name="fade" mode="out-in">
+              <keep-alive>
+                <Map v-if="visType === 'Map'"></Map>
+                <bar-chart
+                  v-else
+                  id="barChart"
+                  :data="chartData"
+                  :messages="{empty: 'No data'}"
+                  xtitle="Total Employment"
+                  thousands=","
+                  download="youth_employment_by_county"
+                  :height="chartHeight">
+                </bar-chart>
+              </keep-alive>
+            </transition>
+          </v-flex>
+          <v-alert
+            :value="noData"
+            type="warning"
+            transition="scale-transition">
+            No data returned. Try different settings...
+          </v-alert>
+        </v-card>
       </v-flex>
+      <IntroModal></IntroModal>
     </v-layout>
   </v-container>
 </template>
@@ -43,7 +58,8 @@ export default {
       db: new Dexie('counties'),
       noData: null,
       stateCode: null,
-      visType: 'Map'
+      visType: 'Map',
+      radios: [{ label: 'Map', value: null }, { label: 'Bar Chart', value: null }]
     }
   },
 
@@ -82,9 +98,6 @@ export default {
     } catch (err) {
       alert(err)
     }
-    eventBus.$on('changeVisType', (type) => {
-      this.visType = type
-    })
     eventBus.$on('stateCode', (code) => {
       this.stateCode = code
     })

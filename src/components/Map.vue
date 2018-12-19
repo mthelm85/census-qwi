@@ -2,7 +2,16 @@
   <v-container grid-list-xs>
     <v-layout row wrap>
       <v-flex xs12>
-        <div id="map" :height="chartHeight"></div>
+        <div
+          id="map"
+          :class="{
+            'mapxs': $vuetify.breakpoint.xs,
+            'mapsm': $vuetify.breakpoint.sm,
+            'mapmd': $vuetify.breakpoint.md,
+            'maplg': $vuetify.breakpoint.lg,
+            'mapxl': $vuetify.breakpoint.xl,
+          }">
+        </div>
       </v-flex>
     </v-layout>
   </v-container>
@@ -17,18 +26,6 @@ export default {
     return {
       employmentTotals: [],
       stateCode: null
-    }
-  },
-
-  computed: {
-    chartHeight () {
-      switch (this.$vuetify.breakpoint.name) {
-        case 'xs': return '220px'
-        case 'sm': return '400px'
-        case 'md': return '500px'
-        case 'lg': return '600px'
-        case 'xl': return '800px'
-      }
     }
   },
 
@@ -111,7 +108,4 @@ export default {
 
 <style lang="css">
 @import "~leaflet/dist/leaflet.css";
-#map {
-  height: 600px;
-}
 </style>

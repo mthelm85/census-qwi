@@ -32,4 +32,19 @@ export default {
 .fade-enter, .fade-leave-to {
   opacity: 0;
 }
+.mapxs {
+  height: 220px;
+}
+.mapsm {
+  height: 400px;
+}
+.mapmd {
+  height: 500px;
+}
+.maplg {
+  height: 600px;
+}
+.mapxl {
+  height: 800px;
+}
 </style>
