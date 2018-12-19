@@ -2,24 +2,30 @@
   <v-container grid-list-xs class="text-xs-center">
     <v-layout row wrap>
       <v-flex xs12>
+        <IntroModal></IntroModal>
         <v-alert
           :value="noData"
           type="warning"
           transition="scale-transition">
           No data returned. Try different settings...
         </v-alert>
-        <bar-chart
-          id="barChart"
-          :data="chartData"
-          :messages="{empty: 'No data'}"
-          xtitle="Total Employment"
-          thousands=","
-          download="youth_employment_by_county"
-          :height="chartHeight">
-        </bar-chart>
+        <transition name="fade" mode="out-in">
+          <keep-alive>
+            <Map v-if="visType === 'Map'"></Map>
+            <bar-chart
+              v-else
+              id="barChart"
+              :data="chartData"
+              :messages="{empty: 'No data'}"
+              xtitle="Total Employment"
+              thousands=","
+              download="youth_employment_by_county"
+              :height="chartHeight">
+            </bar-chart>
+          </keep-alive>
+        </transition>
       </v-flex>
     </v-layout>
-    <IntroModal></IntroModal>
   </v-container>
 </template>
 
@@ -28,6 +34,7 @@ import axios from 'axios'
 import Dexie from 'dexie'
 import { eventBus } from '@/main'
 import IntroModal from '@/components/IntroModal'
+import Map from '@/components/Map'
 
 export default {
   data () {
@@ -35,12 +42,14 @@ export default {
       chartData: [],
       db: new Dexie('counties'),
       noData: null,
-      stateCode: null
+      stateCode: null,
+      visType: 'Map'
     }
   },
 
   components: {
-    IntroModal
+    IntroModal,
+    Map
   },
 
   computed: {
@@ -73,6 +82,9 @@ export default {
     } catch (err) {
       alert(err)
     }
+    eventBus.$on('changeVisType', (type) => {
+      this.visType = type
+    })
     eventBus.$on('stateCode', (code) => {
       this.stateCode = code
     })

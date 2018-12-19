@@ -11,13 +11,24 @@
     </v-toolbar>
 
     <v-divider></v-divider>
-
     <v-list dense>
+      <v-list-tile avatar>
+        <v-list-tile-action>
+          <v-icon>perm_data_setting</v-icon>
+        </v-list-tile-action>
+        <v-radio-group @change="changeVisType" :column="false" v-model="visTypeValue">
+        <v-radio
+          v-for="type in visType"
+          :key="type.label"
+          :label="type.label"
+          :value="type.label"
+        ></v-radio>
+      </v-radio-group>
+      </v-list-tile>
       <v-list-tile
         class="py-2"
         v-for="item in items"
-        :key="item.title"
-        @click="">
+        :key="item.title">
         <v-list-tile-action>
           <v-icon>{{ item.icon }}</v-icon>
         </v-list-tile-action>
@@ -92,7 +103,9 @@ export default {
           ],
           value: null
         }
-      ]
+      ],
+      visType: [{ label: 'Map' }, { label: 'Bar Chart' }],
+      visTypeValue: 'Map'
     }
   },
 
@@ -106,6 +119,9 @@ export default {
     stateFips () {
       return stateFIPS[this.items[0].value]
     },
+    switchLabel () {
+      return 'Map'
+    },
     yearsArray () {
       let year = new Date().getFullYear()
       return [year, year - 1, year - 2]
@@ -113,6 +129,9 @@ export default {
   },
 
   methods: {
+    changeVisType () {
+      eventBus.$emit('changeVisType', this.visTypeValue)
+    },
     async fetchData () {
       this.loading = true
       eventBus.$emit('stateCode', this.stateFips)
