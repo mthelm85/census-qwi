@@ -50,10 +50,12 @@ export default {
   },
 
   async mounted () {
+    eventBus.$on('clearMap', () => {
+      if (this.mapData.jsonLayer) this.mapData.map.removeLayer(this.mapData.jsonLayer)
+    })
     eventBus.$on('stateCode', (code) => {
       this.stateCode = code
     })
-
     this.mapData.map = L.map('map', { zoomControl: true })
       .locate({ setView: true, maxZoom: 6 })
     this.mapData.map.createPane('labels')

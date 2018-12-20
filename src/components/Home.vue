@@ -1,42 +1,54 @@
 <template lang="html">
-  <v-container grid-list-xs class="text-xs-center">
+  <v-container class="text-xs-center">
     <v-layout row wrap>
       <v-flex xs12>
         <v-card>
-          <v-flex>
-            <v-radio-group class="ml-3" :column="false" v-model="visType">
-            <v-radio
-              color="primary"
-              v-for="radio in radios"
-              :key="radio.label"
-              :label="radio.label"
-              :value="radio.label"
-            ></v-radio>
-          </v-radio-group>
-          </v-flex>
-          <v-flex xs12>
-            <transition name="fade" mode="out-in">
-              <keep-alive>
-                <Map v-if="visType === 'Map'"></Map>
-                <bar-chart
-                  v-else
-                  id="barChart"
-                  :data="chartData"
-                  :messages="{empty: 'No data'}"
-                  xtitle="Total Employment"
-                  thousands=","
-                  download="youth_employment_by_county"
-                  :height="chartHeight">
-                </bar-chart>
-              </keep-alive>
-            </transition>
-          </v-flex>
-          <v-alert
-            :value="noData"
-            type="warning"
-            transition="scale-transition">
-            No data returned. Try different settings...
-          </v-alert>
+          <v-layout row wrap>
+            <v-flex xs4>
+              <v-radio-group class="pl-3" :column="false" v-model="visType">
+                <v-radio
+                  color="primary"
+                  v-for="radio in radios"
+                  :key="radio.label"
+                  :label="radio.label"
+                  :value="radio.label">
+                </v-radio>
+              </v-radio-group>
+             </v-flex>
+             <v-flex xs4>
+               <v-alert
+                 dismissible
+                 :value="noData"
+                 type="warning"
+                 transition="scale-transition">
+                 No data returned. Try different settings...
+               </v-alert>
+             </v-flex>
+             <v-flex xs4>
+               <transition name="fade" mode="out-in">
+                 <div v-if="visType === 'Map'" class="text-xs-right pt-2 pr-2">
+                   <v-btn color="primary" @click="clearMap">Clear Map</v-btn>
+                 </div>
+               </transition>
+             </v-flex>
+            <v-flex xs12>
+              <transition name="fade" mode="out-in">
+                <keep-alive>
+                  <Map v-if="visType === 'Map'" class="pt-0"></Map>
+                  <bar-chart
+                    v-else
+                    id="barChart"
+                    :data="chartData"
+                    :messages="{empty: 'No data'}"
+                    xtitle="Total Employment"
+                    thousands=","
+                    download="youth_employment_by_county"
+                    :height="chartHeight">
+                  </bar-chart>
+                </keep-alive>
+              </transition>
+            </v-flex>
+          </v-layout>
         </v-card>
       </v-flex>
       <IntroModal></IntroModal>
@@ -83,7 +95,7 @@ export default {
 
   async created () {
     try {
-      const res = await axios.get('https://census-qwi.herokuapp.com/county-fips')
+      const res = await axios.get('https://cors-anywhere.herokuapp.com/https://census-qwi.herokuapp.com/county-fips')
       this.db.version(1).stores({
         counties: 'id, name'
       })
@@ -115,6 +127,12 @@ export default {
     eventBus.$on('noContent', () => {
       this.noData = true
     })
+  },
+
+  methods: {
+    clearMap () {
+      eventBus.$emit('clearMap')
+    }
   }
 }
 </script>
