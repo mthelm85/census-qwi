@@ -52,6 +52,7 @@ export default {
   async mounted () {
     eventBus.$on('clearMap', () => {
       if (this.mapData.jsonLayer) this.mapData.map.removeLayer(this.mapData.jsonLayer)
+      for (let i in counties.features) delete counties.features[i].properties.totalEmployment
     })
     eventBus.$on('stateCode', (code) => {
       this.stateCode = code
@@ -73,8 +74,6 @@ export default {
       minZoom: 4,
       pane: 'labels'
     }).addTo(this.mapData.map)
-
-    // Listen for data from NavDrawer, then generate choropleth
     eventBus.$on('chartData', (data) => {
       // Store just the employment totals into a new array so that we can compute max in getColor (above)
       this.employmentTotals = data.map(element => element[0]).filter(num => num > 0)
