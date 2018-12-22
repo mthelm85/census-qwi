@@ -89,6 +89,7 @@ export default {
         case 'md': return '500px'
         case 'lg': return '600px'
         case 'xl': return '800px'
+        default: return '500px'
       }
     }
   },

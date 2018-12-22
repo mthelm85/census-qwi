@@ -29,7 +29,8 @@ export default {
         map: null,
         baseLayer: null,
         labelLayer: null,
-        jsonLayer: null
+        jsonLayer: null,
+        jsonLayerGroup: null
       },
       stateCode: null
     }
@@ -51,7 +52,11 @@ export default {
 
   async mounted () {
     eventBus.$on('clearMap', () => {
-      if (this.mapData.jsonLayer) this.mapData.map.removeLayer(this.mapData.jsonLayer)
+      if (this.mapData.jsonLayer) {
+        this.mapData.jsonLayerGroup.eachLayer((layer) => {
+          this.mapData.jsonLayerGroup.removeLayer(layer)
+        })
+      }
       for (let i in counties.features) delete counties.features[i].properties.totalEmployment
     })
     eventBus.$on('stateCode', (code) => {
@@ -74,6 +79,7 @@ export default {
       minZoom: 4,
       pane: 'labels'
     }).addTo(this.mapData.map)
+    this.mapData.jsonLayerGroup = new L.layerGroup().addTo(this.mapData.map)
     eventBus.$on('chartData', (data) => {
       // Store just the employment totals into a new array so that we can compute max in getColor (above)
       this.employmentTotals = data.map(element => element[0]).filter(num => num > 0)
@@ -109,7 +115,8 @@ export default {
               `)
           }
         }
-      }).addTo(this.mapData.map)
+      })
+      this.mapData.jsonLayerGroup.addLayer(this.mapData.jsonLayer)
     })
   }
 }
