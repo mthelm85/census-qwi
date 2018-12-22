@@ -51,16 +51,15 @@ export default {
   },
 
   async mounted () {
-    eventBus.$on('clearMap', () => {
+    eventBus.$on('stateCode', (code) => {
+      this.stateCode = code
+      // Clear the geoJSON from the map
       if (this.mapData.jsonLayer) {
         this.mapData.jsonLayerGroup.eachLayer((layer) => {
           this.mapData.jsonLayerGroup.removeLayer(layer)
         })
       }
       for (let i in counties.features) delete counties.features[i].properties.totalEmployment
-    })
-    eventBus.$on('stateCode', (code) => {
-      this.stateCode = code
     })
     this.mapData.map = L.map('map', { zoomControl: true })
       .locate({ setView: true, maxZoom: 6 })

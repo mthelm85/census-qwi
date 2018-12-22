@@ -4,7 +4,7 @@
       <v-flex xs12>
         <v-card>
           <v-layout row wrap>
-            <v-flex xs4>
+            <v-flex xs6>
               <v-radio-group class="pl-3" :column="false" v-model="visType">
                 <v-radio
                   color="primary"
@@ -15,7 +15,7 @@
                 </v-radio>
               </v-radio-group>
              </v-flex>
-             <v-flex xs4>
+             <v-flex xs6>
                <v-alert
                  dismissible
                  :value="noData"
@@ -23,13 +23,6 @@
                  transition="scale-transition">
                  No data returned. Try different settings...
                </v-alert>
-             </v-flex>
-             <v-flex xs4>
-               <transition name="fade" mode="out-in">
-                 <div v-if="visType === 'Map'" class="text-xs-right pt-2 pr-2">
-                   <v-btn color="primary" @click="clearMap">Clear Map</v-btn>
-                 </div>
-               </transition>
              </v-flex>
             <v-flex xs12>
               <transition name="fade" mode="out-in">
@@ -128,12 +121,6 @@ export default {
     eventBus.$on('noContent', () => {
       this.noData = true
     })
-  },
-
-  methods: {
-    clearMap () {
-      eventBus.$emit('clearMap')
-    }
   }
 }
 </script>
