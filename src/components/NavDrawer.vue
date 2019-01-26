@@ -4,7 +4,7 @@
       <v-list>
         <v-list-tile>
           <v-list-tile-title class="title text-xs-center">
-            Explore Youth Employment
+            Explore Employment Stats
           </v-list-tile-title>
         </v-list-tile>
       </v-list>
@@ -59,8 +59,9 @@ export default {
     return {
       loading: false,
       items: [
+        { label: 'Indicator', icon: 'timeline', list: ['Youth Employment', 'Avg. Monthly Earnings'], value: null },
         { label: 'State', icon: 'location_on', list: states, value: null },
-        { label: 'Year', icon: 'calendar_today', list: [new Date().getFullYear() - 1, new Date().getFullYear() - 2, new Date().getFullYear() - 3], value: null },
+        { label: 'Year', icon: 'calendar_today', list: [new Date().getFullYear() - 2, new Date().getFullYear() - 3, new Date().getFullYear() - 4], value: null },
         { label: 'Quarter', icon: 'date_range', list: ['1', '2', '3', '4'], value: null },
         { label: 'Firm Size (# Employees)', icon: 'supervisor_account', list: ['All Firm Sizes', '0 - 19', '20 - 49', '50 - 249', '250 - 499', '500+'], value: null },
         {
@@ -95,24 +96,32 @@ export default {
   },
 
   computed: {
+    ageGroup () {
+      return this.items[0].value === 'Youth Employment' ? 'A01' : 'A00'
+    },
     disableBtn () {
       return this.items.filter(item => item.value === null).length > 0
     },
     firmSize () {
-      return firmSizeCodes[this.items[3].value]
+      return firmSizeCodes[this.items[4].value]
+    },
+    indicatorCode () {
+      return this.items[0].value === 'Youth Employment' ? 'Emp' : 'EarnS'
     },
     industry () {
-      return industryCodes[this.items[4].value]
+      return industryCodes[this.items[5].value]
+    },
+    quarter () {
+      return this.items[3].value
     },
     stateFips () {
-      return stateFIPS[this.items[0].value]
+      return stateFIPS[this.items[1].value]
     },
     switchLabel () {
       return 'Map'
     },
-    yearsArray () {
-      let year = new Date().getFullYear()
-      return [year, year - 1, year - 2]
+    year () {
+      return this.items[2].value
     }
   },
 
@@ -123,13 +132,13 @@ export default {
       try {
         const res = await axios.get('https://api.census.gov/data/timeseries/qwi/sa', {
           params: {
-            get: 'Emp',
+            get: this.indicatorCode,
             for: 'county:*',
             in: `state:${this.stateFips}`,
-            year: this.items[1].value,
-            quarter: this.items[2].value,
+            year: this.year,
+            quarter: this.quarter,
             sex: '0',
-            agegrp: 'A01',
+            agegrp: this.ageGroup,
             ownercode: 'A05',
             firmsize: this.firmSize,
             seasonadj: 'U',
@@ -146,6 +155,12 @@ export default {
         if (err) alert(err.message)
       }
       this.loading = false
+    }
+  },
+
+  watch: {
+    indicatorCode () {
+      eventBus.$emit('indicatorCode', this.indicatorCode)
     }
   }
 }

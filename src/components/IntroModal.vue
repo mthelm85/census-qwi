@@ -6,13 +6,13 @@
       <v-card-title
         class="headline grey lighten-2"
         primary-title>
-        Explore Youth Employment (EYE)
+        Explore Employment Stats
       </v-card-title>
 
       <v-card-text>
-        EYE allows you to explore youth employment data in your state. Simply select the options
+        This applciation allows you to explore employment data by state. Simply select the options
         of your choosing, and then click the 'Get Data' button. The application will pull
-        U.S. Census Bureau employment data for the 14 - 18 year old age group, based on your settings.
+        U.S. Census Bureau employment data, based on your settings.
       </v-card-text>
 
       <v-divider></v-divider>

@@ -1,7 +1,8 @@
 <template lang="html">
-  <v-container class="text-xs-center">
+  <v-container class="text-xs">
     <v-layout row wrap>
       <v-flex xs12>
+        {{ dataDescription }}
         <v-card>
           <v-layout row wrap>
             <v-flex xs6>
@@ -60,6 +61,7 @@ export default {
   data () {
     return {
       chartData: [],
+      dataDescription: 'No indicator selected',
       db: new Dexie('counties'),
       mapKey: 0,
       noData: null,
@@ -89,7 +91,7 @@ export default {
 
   async created () {
     try {
-      const res = await axios.get('https://census-qwi.herokuapp.com/county-fips')
+      const res = await axios.get('https://cors-anywhere.herokuapp.com/https://census-qwi.herokuapp.com/county-fips')
       this.db.version(1).stores({
         counties: 'id, name'
       })
@@ -105,6 +107,9 @@ export default {
     } catch (err) {
       alert(err)
     }
+    eventBus.$on('indicatorCode', (code) => {
+      code === 'Emp' ? this.dataDescription = 'Total employment for 14 - 18 age group' : this.dataDescription = 'Average monthly earnings'
+    })
     eventBus.$on('stateCode', (code) => {
       this.stateCode = code
     })

@@ -110,7 +110,7 @@ export default {
             layer.bindPopup(`
                 <strong>County:</strong> ${feature.properties.NAME}
                 <br />
-                <strong>Total Employment:</strong> ${feature.properties.totalEmployment}
+                <strong>Value:</strong> ${feature.properties.totalEmployment}
               `)
           }
         }
