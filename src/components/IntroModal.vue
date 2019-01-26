@@ -10,7 +10,7 @@
       </v-card-title>
 
       <v-card-text>
-        This applciation allows you to explore employment data by state. Simply select the options
+        This application allows you to explore employment data by state. Simply select the options
         of your choosing, and then click the 'Get Data' button. The application will pull
         U.S. Census Bureau employment data, based on your settings.
       </v-card-text>
